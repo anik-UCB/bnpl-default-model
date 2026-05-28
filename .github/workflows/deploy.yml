@@ -1,0 +1,69 @@
+name: ML Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Test ─────────────────────────────────────────────────────────
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy scikit-learn imbalanced-learn \
+                      xgboost fastapi uvicorn pydantic \
+                      openpyxl joblib pytest httpx scipy
+
+      - name: Test API health endpoint
+        run: pytest tests/ -v
+
+  # ── Job 2: Build Docker image ────────────────────────────────────────────
+  build:
+    runs-on: ubuntu-latest
+    needs: test        # Only runs if test job passes
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t bnpl-model:${{ github.sha }} .
+
+      - name: Verify container starts
+        run: |
+          docker run -d -p 8000:8000 \
+            --name test-container \
+            bnpl-model:${{ github.sha }}
+          sleep 5
+          curl --fail http://localhost:8000/health
+          docker stop test-container
+
+  # ── Job 3: Deploy to Railway ─────────────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build       # Only runs if build job passes
+    if: github.ref == 'refs/heads/main'   # Only deploy from main branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-05-28T06:58:07.687891",
+  "report_path": "monitoring/reports/drift_report_20260528_015807.html",
+  "dataset_drifted": false,
+  "n_drifted_cols": 2,
+  "n_total_cols": 15,
+  "share_drifted": 0.1333,
+  "column_results": {
+    "days_late_1": {
+      "drifted": true,
+      "p_value": null,
+      "statistic": null
+    },
+    "shortfall_1": {
+      "drifted": false,
+      "p_value": null,
+      "statistic": null
+    },
+    "log_order_amount": {
+      "drifted": true,
+      "p_value": null,
+      "statistic": null
+    },
+    "merchant_default_rate": {
+      "drifted": false,
+      "p_value": null,
+      "statistic": null
+    },
+    "customer_prior_default_rate": {
+      "drifted": false,
+      "p_value": null,
+      "statistic": null
+    }
+  },
+  "action_required": true,
+  "action_reasons": [
+    "days_late_1 drifted \u2014 payment behaviour changing"
+  ],
+  "status": "ACTION REQUIRED"
+}
