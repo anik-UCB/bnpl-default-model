@@ -1,0 +1,22 @@
+artifact_path: /Users/anik/BNPL/bnpl-default-model/mlruns/1/models/m-707058744742461e8460fc5e547eb908/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.12.7
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBClassifier
+    model_format: ubj
+    xgb_version: 2.1.4
+mlflow_version: 3.12.0
+model_id: m-707058744742461e8460fc5e547eb908
+model_size_bytes: 273491
+model_uuid: m-707058744742461e8460fc5e547eb908
+prompts: null
+run_id: 60f8d3aeb94b4491a7d745a997fb47cc
+utc_time_created: '2026-05-28 05:43:20.943497'
